@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Registration Form</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <!-- Login Form -->
+    <form id="login" class="form" autocomplete="off">
+      <h2>Login</h2>
+      <input type="email" placeholder="Email" required />
+      <input type="password" placeholder="Password" required />
+      <button type="submit">Login</button>
+    </form>
+
+    <!-- Register Form -->
+    <form id="register" class="form hidden" autocomplete="off">
+      <h2>Register</h2>
+      <input type="text" placeholder="Username" required />
+      <input type="email" placeholder="Email" required />
+      <input type="password" placeholder="Password" required />
+      <button type="submit">Register</button>
+    </form>
+
+    <!-- Forgot Password Form -->
+    <form id="forgot" class="form hidden" autocomplete="off">
+      <h2>Forgot Password</h2>
+      <input type="email" placeholder="Enter your email" required />
+      <button type="submit">Send Reset Link</button>
+    </form>
+
+    <!-- Tab Buttons BELOW forms -->
+    <div class="tab-buttons">
+      <button onclick="showForm('login')">Login</button>
+      <button onclick="showForm('register')">Register</button>
+      <button onclick="showForm('forgot')">Forgot Password</button>
+    </div>
+  </div>
+
+  <script>
+    function showForm(formId) {
+      const forms = document.querySelectorAll('.form');
+      forms.forEach(form => form.classList.add('hidden'));
+      document.getElementById(formId).classList.remove('hidden');
+    }
+  
+    // Clear form fields after submission
+    function clearForm(form) {
+      form.querySelectorAll('input').forEach(input => input.value = '');
+    }
+  
+    window.onload = () => {
+      // Clear inputs after reload
+      document.querySelectorAll('form').forEach(form => form.reset());
+    };
+  
+    // Form submit handlers
+    document.getElementById('register').addEventListener('submit', function (e) {
+      e.preventDefault();
+      alert("Registered successfully!");
+      clearForm(this);
+    });
+  
+    document.getElementById('login').addEventListener('submit', function (e) {
+      e.preventDefault();
+      alert("Logged in!");
+      clearForm(this);
+    });
+  
+    document.getElementById('forgot').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const email = this.querySelector('input').value;
+  
+      const res = await fetch('http://localhost:3001/forgot-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+  
+      const data = await res.json();
+      alert(data.message);
+      clearForm(this);
+    });
+  </script>  
+</body>
+</html>
